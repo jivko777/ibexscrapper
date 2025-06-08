@@ -1,10 +1,9 @@
-
 name: Daily IBEX Data Fetch
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # всеки ден в 15:00 UTC (16:00 CET)
-  workflow_dispatch:  # позволява ръчно стартиране от интерфейса
+    - cron: '0 15 * * *'  # Всеки ден в 15:00 UTC (16:00 CET)
+  workflow_dispatch:  # Позволява ръчно стартиране
 
 jobs:
   fetch-data:
@@ -29,9 +28,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add ibex_data.json
-          git commit -m "Daily update of IBEX data"
-          git push
-        continue-on-error: true  # ако няма промени, да не спира
+          git commit -m "Daily update of IBEX data" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
