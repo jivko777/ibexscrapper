@@ -1,1 +1,37 @@
 
+name: Daily IBEX Data Fetch
+
+on:
+  schedule:
+    - cron: '0 15 * * *'  # всеки ден в 15:00 UTC (16:00 CET)
+  workflow_dispatch:  # позволява ръчно стартиране от интерфейса
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run fetch script
+        run: python fetch_ibex_data.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ibex_data.json
+          git commit -m "Daily update of IBEX data"
+          git push
+        continue-on-error: true  # ако няма промени, да не спира
