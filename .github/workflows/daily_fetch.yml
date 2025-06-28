@@ -2,7 +2,7 @@ name: Daily IBEX Data Fetch
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # Всеки ден в 15:00 UTC (16:00 CET)
+#    - cron: '0 15 * * *'  # Всеки ден в 15:00 UTC (16:00 CET)
   workflow_dispatch:  # Позволява ръчно стартиране
 
 jobs:
